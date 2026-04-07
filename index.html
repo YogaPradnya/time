@@ -12,9 +12,9 @@
         }
         
         #display-container { 
-            padding: 15px 30px; border-radius: 12px; 
+            padding: 15px 30px; border-radius: 0; 
             display: inline-block; transition: all 0.3s ease;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            text-shadow: none;
         }
         
         #custom-text { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
@@ -24,9 +24,10 @@
         #controls { 
             margin-top: 20px; padding: 20px; 
             background: rgba(30, 30, 30, 0.95); color: #fff; 
-            border-radius: 10px; display: inline-block;
+            border-radius: 0; display: inline-block;
             text-align: left; border: 1px solid #444;
             max-width: 400px;
+            box-shadow: none;
         }
         
         /* Mode OBS: Sembunyikan TOTAL secara default */
@@ -53,28 +54,31 @@
         
         button { 
             background: #2563eb; color: white; border: none; 
-            padding: 8px 12px; border-radius: 5px; cursor: pointer;
+            padding: 8px 12px; border-radius: 0; cursor: pointer;
             margin-right: 5px; font-weight: bold; transition: 0.2s;
+            box-shadow: none;
         }
         button:hover { background: #1d4ed8; }
         button.danger { background: #dc2626; }
         button.danger:hover { background: #b91c1c; }
         button.success { background: #16a34a; }
         button.success:hover { background: #15803d; }
-        button.generate { background: #8b5cf6; width: 100%; margin-top: 10px; padding: 12px;}
+        button.generate { background: #8b5cf6; width: 100%; margin-top: 10px; padding: 12px; border-radius: 0;}
         button.generate:hover { background: #7c3aed; }
         
         input[type="text"], input[type="number"], select { 
-            padding: 10px; border-radius: 8px; border: 1px solid #444; 
+            padding: 10px; border-radius: 0; border: 1px solid #444; 
             background: #111; color: #fff; font-family: inherit;
+            box-shadow: none;
         }
-        input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.5); }
+        input:focus { outline: none; border-color: #2563eb; box-shadow: none; }
         
         #resultLink {
             width: 100%; box-sizing: border-box; margin-top: 10px;
             padding: 12px; background: #000; color: #10b981;
-            border: 1px solid #10b981; border-radius: 8px;
+            border: 1px solid #10b981; border-radius: 0;
             display: none; word-break: break-all; font-family: monospace;
+            box-shadow: none;
         }
         
         hr { border: 1px solid #444; margin: 15px 0; }
