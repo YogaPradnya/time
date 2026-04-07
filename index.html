@@ -27,9 +27,27 @@
             border-radius: 10px; display: inline-block;
             text-align: left; border: 1px solid #444;
             max-width: 400px;
+            transition: opacity 0.3s ease;
         }
         
-        /* Saat dibuka di OBS (ada parameter di URL): */
+        /* Mode OBS: Sembunyikan TOTAL secara default */
+        .hide-controls #controls { 
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            margin: 0;
+            opacity: 0; 
+            pointer-events: none;
+        }
+
+        /* Tampilkan TOTAL saat mouse diarahkan (hanya bekerja di mode Interact OBS) */
+        .hide-controls:hover #controls,
+        .hide-controls #controls:hover { 
+            opacity: 1; 
+            pointer-events: auto;
+        }
+
+        /* Sembunyikan bagian desain & link saat di OBS agar lebih ringkas */
         .hide-controls #design-section, 
         .hide-controls .generate,
         .hide-controls #resultLink,
