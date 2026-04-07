@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBS Custom Timer Generator</title>
+    <style>
+        body { 
+            margin: 0; padding: 20px; text-align: center; 
+            background-color: transparent; overflow: hidden;
+            font-family: sans-serif;
+        }
+        
+        #display-container { 
+            padding: 15px 30px; border-radius: 12px; 
+            display: inline-block; transition: all 0.3s ease;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        #custom-text { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
+        #timer-display { font-size: 72px; font-weight: bold; font-variant-numeric: tabular-nums; line-height: 1; }
+
+        /* Panel Kontrol */
+        #controls { 
+            margin-top: 40px; padding: 20px; 
+            background: rgba(30, 30, 30, 0.95); color: #fff; 
+            border-radius: 10px; display: inline-block;
+            text-align: left; border: 1px solid #444;
+            max-width: 400px;
+        }
+        
+        /* Saat dibuka di OBS (ada parameter di URL): */
+        .hide-controls #design-section, 
+        .hide-controls .generate,
+        .hide-controls #resultLink,
+        .hide-controls h3:nth-of-type(2),
+        .hide-controls hr { 
+            display: none; 
+        }
+
+        .control-group { margin-bottom: 15px; }
+        .control-group label { display: inline-block; width: 120px; font-size: 14px; }
+        
+        button { 
+            background: #2563eb; color: white; border: none; 
+            padding: 8px 12px; border-radius: 5px; cursor: pointer;
+            margin-right: 5px; font-weight: bold; transition: 0.2s;
+        }
+        button:hover { background: #1d4ed8; }
+        button.danger { background: #dc2626; }
+        button.danger:hover { background: #b91c1c; }
+        button.success { background: #16a34a; }
+        button.success:hover { background: #15803d; }
+        button.generate { background: #8b5cf6; width: 100%; margin-top: 10px; padding: 12px;}
+        button.generate:hover { background: #7c3aed; }
+        
+        input[type="text"], input[type="number"], select { 
+            padding: 10px; border-radius: 8px; border: 1px solid #444; 
+            background: #111; color: #fff; font-family: inherit;
+        }
+        input:focus { outline: none; border-color: #2563eb; box-shadow: 0 0 5px rgba(37, 99, 235, 0.5); }
+        
+        #resultLink {
+            width: 100%; box-sizing: border-box; margin-top: 10px;
+            padding: 12px; background: #000; color: #10b981;
+            border: 1px solid #10b981; border-radius: 8px;
+            display: none; word-break: break-all; font-family: monospace;
+        }
+        
+        hr { border: 1px solid #444; margin: 15px 0; }
+    </style>
+</head>
+<body>
+
+    <div id="display-container">
+        <div id="custom-text">WAKTU TERSISA</div>
+        <div id="timer-display">00:00:00</div>
+    </div>
+
+    <div id="controls">
+        <h3 style="margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 10px;">1. Pengaturan Waktu</h3>
+        <div class="control-group">
+            <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
+                <div style="text-align: center;">
+                    <input type="number" id="in-h" placeholder="00" min="0" style="width: 45px; text-align: center;">
+                    <br><small style="color: #888;">Jam</small>
+                </div> :
+                <div style="text-align: center;">
+                    <input type="number" id="in-m" placeholder="00" min="0" max="59" style="width: 45px; text-align: center;">
+                    <br><small style="color: #888;">Mnt</small>
+                </div> :
+                <div style="text-align: center;">
+                    <input type="number" id="in-s" placeholder="00" min="0" max="59" style="width: 45px; text-align: center;">
+                    <br><small style="color: #888;">Det</small>
+                </div>
+            </div>
+            <div style="display: flex; gap: 5px;">
+                <button class="primary" onclick="modifyTime('set')" style="flex: 1; padding: 10px; background: #6366f1;">Set Waktu</button>
+            </div>
+            <div style="display: flex; gap: 5px; margin-top: 10px;">
+                <button class="success" onclick="startTimer()" style="flex: 1; padding: 10px;">Start</button>
+                <button class="danger" onclick="pauseTimer()" style="flex: 1; padding: 10px;">Pause</button>
+                <button onclick="resetTimer()" style="flex: 1; padding: 10px;">Reset</button>
+            </div>
+        </div>
+        
+        <div id="design-section">
+            <h3 style="margin-top: 20px; border-bottom: 1px solid #555; padding-bottom: 10px;">2. Desain (Sebelum Live)</h3>
+            <div class="control-group">
+                <label>Teks Utama:</label> 
+                <input type="text" id="textInput" value="WAKTU TERSISA" oninput="updateText()">
+            </div>
+            <div class="control-group">
+                <label>Font Style:</label>
+                <select id="fontInput" onchange="updateStyle()">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="'Courier New', monospace">Courier</option>
+                    <option value="'Impact', sans-serif">Impact</option>
+                    <option value="'Trebuchet MS', sans-serif">Trebuchet</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Warna Teks:</label> 
+                <input type="color" id="colorInput" value="#000000" onchange="updateStyle()">
+            </div>
+            <div class="control-group">
+                <label>Warna Background:</label> 
+                <input type="color" id="bgInput" value="#000000" onchange="updateStyle()">
+            </div>
+            <div class="control-group">
+                <label>Background Solid:</label> 
+                <input type="checkbox" id="solidBg" onchange="updateStyle()"> 
+            </div>
+        </div>
+        
+        <button class="generate" onclick="generateLink()">🔗 Generate Link untuk OBS</button>
+        <textarea id="resultLink" rows="3" readonly></textarea>
+        
+        <div style="font-size: 11px; color: #9ca3af; margin-top: 15px; text-align: center;">
+            *Edit waktu dari OBS lewat menu <b>Interact</b> (Klik kanan source > Interact).
+        </div>
+    </div>
+
+    <script>
+        let timeRemaining = 0;
+        let timerInterval;
+        let isRunning = false;
+
+        // --- Logika Waktu ---
+        function updateDisplay() {
+            let h = Math.floor(timeRemaining / 3600);
+            let m = Math.floor((timeRemaining % 3600) / 60);
+            let s = timeRemaining % 60;
+            document.getElementById('timer-display').innerText =
+                String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+            
+            // Simpan waktu ke localStorage agar tidak hilang saat direfresh/tutup
+            localStorage.setItem('savedTime', timeRemaining);
+        }
+
+        function modifyTime(mode) {
+            const h = parseInt(document.getElementById('in-h').value) || 0;
+            const m = parseInt(document.getElementById('in-m').value) || 0;
+            const s = parseInt(document.getElementById('in-s').value) || 0;
+            
+            let inputSeconds = (s) + (m * 60) + (h * 3600);
+            
+            if (mode === 'set') {
+                timeRemaining = inputSeconds;
+            } else if (mode === 'add') {
+                timeRemaining += inputSeconds;
+            } else if (mode === 'sub') {
+                timeRemaining = Math.max(0, timeRemaining - inputSeconds);
+            }
+            
+            updateDisplay();
+        }
+
+        function startTimer() {
+            if (!isRunning && timeRemaining > 0) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    if (timeRemaining > 0) { timeRemaining--; updateDisplay(); } 
+                    else { pauseTimer(); }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() { isRunning = false; clearInterval(timerInterval); }
+        function resetTimer() { pauseTimer(); timeRemaining = 0; updateDisplay(); }
+
+        // --- Logika Desain ---
+        function updateText() { 
+            const text = document.getElementById('textInput').value;
+            document.getElementById('custom-text').innerText = text; 
+            localStorage.setItem('savedText', text);
+        }
+
+        function updateStyle() {
+            const container = document.getElementById('display-container');
+            const font = document.getElementById('fontInput').value;
+            const color = document.getElementById('colorInput').value;
+            const bg = document.getElementById('bgInput').value;
+            const solid = document.getElementById('solidBg').checked;
+
+            container.style.fontFamily = font;
+            container.style.color = color;
+            
+            if (solid) {
+                container.style.backgroundColor = bg;
+            } else {
+                container.style.backgroundColor = 'transparent';
+            }
+
+            // Simpan desain ke localStorage
+            localStorage.setItem('savedFont', font);
+            localStorage.setItem('savedColor', color);
+            localStorage.setItem('savedBg', bg);
+            localStorage.setItem('savedSolid', solid);
+        }
+
+        // --- Logika URL Parameters ---
+        function generateLink() {
+            const baseUrl = window.location.origin + window.location.pathname;
+            const params = new URLSearchParams();
+            
+            params.set('text', document.getElementById('textInput').value);
+            params.set('font', document.getElementById('fontInput').value);
+            params.set('color', document.getElementById('colorInput').value);
+            params.set('bg', document.getElementById('bgInput').value);
+            params.set('solid', document.getElementById('solidBg').checked);
+
+            let h = Math.floor(timeRemaining / 3600);
+            let m = Math.floor((timeRemaining % 3600) / 60);
+            let s = timeRemaining % 60;
+            if(h > 0) params.set('h', h);
+            if(m > 0) params.set('m', m);
+            if(s > 0) params.set('s', s);
+
+            const finalUrl = baseUrl + '?' + params.toString();
+            
+            const resultBox = document.getElementById('resultLink');
+            resultBox.value = finalUrl;
+            resultBox.style.display = 'block';
+            resultBox.select();
+            document.execCommand('copy');
+            alert("Link berhasil dicopy!");
+        }
+
+        function loadState() {
+            const params = new URLSearchParams(window.location.search);
+            
+            // 1. Coba load dari LocalStorage duluan sebagai basis
+            if (localStorage.getItem('savedTime')) timeRemaining = parseInt(localStorage.getItem('savedTime'));
+            if (localStorage.getItem('savedText')) document.getElementById('textInput').value = localStorage.getItem('savedText');
+            if (localStorage.getItem('savedFont')) document.getElementById('fontInput').value = localStorage.getItem('savedFont');
+            if (localStorage.getItem('savedColor')) document.getElementById('colorInput').value = localStorage.getItem('savedColor');
+            if (localStorage.getItem('savedBg')) document.getElementById('bgInput').value = localStorage.getItem('savedBg');
+            if (localStorage.getItem('savedSolid')) document.getElementById('solidBg').checked = localStorage.getItem('savedSolid') === 'true';
+
+            // 2. Jika ada parameter di URL, timpa nilai LocalStorage (Penting untuk link OBS)
+            if (window.location.search) {
+                document.body.classList.add('hide-controls');
+                
+                if (params.has('text')) document.getElementById('textInput').value = params.get('text');
+                if (params.has('font')) document.getElementById('fontInput').value = params.get('font');
+                if (params.has('color')) document.getElementById('colorInput').value = params.get('color');
+                if (params.has('bg')) document.getElementById('bgInput').value = params.get('bg');
+                if (params.has('solid')) document.getElementById('solidBg').checked = params.get('solid') === 'true';
+
+                let h = parseInt(params.get('h'));
+                let m = parseInt(params.get('m'));
+                let s = parseInt(params.get('s'));
+                if (!isNaN(h) || !isNaN(m) || !isNaN(s)) {
+                    timeRemaining = (parseInt(h)||0)*3600 + (parseInt(m)||0)*60 + (parseInt(s)||0);
+                }
+            }
+            
+            updateText();
+            updateStyle();
+            updateDisplay();
+        }
+
+        loadState();
+    </script>
+</body>
+</html>
