@@ -6,23 +6,40 @@
     <title>OBS Custom Timer Generator</title>
     <style>
         body { 
-            margin: 0; padding: 20px; text-align: center; 
-            background-color: transparent; overflow: hidden;
+            margin: 0; padding: 0; text-align: center; 
+            background-color: transparent;
             font-family: sans-serif;
         }
         
+        /* Layout Utama */
+        #main-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 200vh; /* Agar bisa di-scroll di Interact mode */
+        }
+
+        .timer-screen {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
         #display-container { 
             padding: 15px 30px; border-radius: 0; 
-            display: inline-block; transition: all 0.3s ease;
+            display: inline-block;
             text-shadow: none;
         }
-        
+
         #custom-text { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
-        #timer-display { font-size: 72px; font-weight: bold; font-variant-numeric: tabular-nums; line-height: 1; }
+        #timer-display { font-size: 100px; font-weight: bold; font-variant-numeric: tabular-nums; }
 
         /* Panel Kontrol */
         #controls { 
-            margin-top: 20px; padding: 20px; 
+            margin-top: 50px; padding: 20px; 
             background: rgba(30, 30, 30, 0.95); color: #fff; 
             border-radius: 0; display: inline-block;
             text-align: left; border: 1px solid #444;
@@ -30,16 +47,6 @@
             box-shadow: none;
         }
         
-        /* Mode OBS: Sembunyikan TOTAL secara default */
-        .hide-controls #controls { 
-            display: none; 
-        }
-
-        /* Saat di-klik untuk muncul (untuk mode Interact) */
-        .show-controls #controls { 
-            display: inline-block !important; 
-        }
-
         /* Sembunyikan bagian desain & link saat di OBS agar lebih ringkas */
         .hide-controls #design-section, 
         .hide-controls .generate,
@@ -85,14 +92,19 @@
     </style>
 </head>
 <body>
+    <div id="main-wrapper">
+        <div class="timer-screen">
+            <div id="display-container" style="background: white; color: black;">
+                <div id="custom-text">WAKTU TERSISA</div>
+                <div id="timer-display">00:00:00</div>
+            </div>
+            <div class="hide-controls" style="margin-top: 20px; font-size: 12px; color: #555;">
+                (Scroll ke bawah untuk setting di Interact mode)
+            </div>
+        </div>
 
-    <div id="display-container">
-        <div id="custom-text">WAKTU TERSISA</div>
-        <div id="timer-display">00:00:00</div>
-    </div>
-
-    <div id="controls">
-        <h3 style="margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 10px;">1. Pengaturan Waktu</h3>
+        <div id="controls">
+            <h3 style="margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 10px;">1. Pengaturan Waktu</h3>
         <div class="control-group">
             <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
                 <div style="text-align: center;">
@@ -154,6 +166,7 @@
             *Edit waktu dari OBS lewat menu <b>Interact</b> (Klik kanan source > Interact).
         </div>
     </div>
+    </div> <!-- End Main Wrapper -->
 
     <script>
         let timeRemaining = 0;
@@ -261,12 +274,6 @@
             alert("Link berhasil dicopy!");
         }
 
-        function toggleControls() {
-            if (document.body.classList.contains('hide-controls')) {
-                document.body.classList.toggle('show-controls');
-            }
-        }
-
         // --- Load State ---
         function loadState() {
             const params = new URLSearchParams(window.location.search);
@@ -299,9 +306,6 @@
             updateStyle();
             updateDisplay();
         }
-        
-        // Tambahkan event click untuk toggle menu di mode OBS
-        document.getElementById('display-container').onclick = toggleControls;
         
         loadState();
     </script>
