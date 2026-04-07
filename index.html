@@ -16,11 +16,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 200vh; /* Agar bisa di-scroll di Interact mode */
+            width: 100%;
+            min-height: 200vh;
         }
 
         .timer-screen {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -29,22 +30,28 @@
         }
 
         #display-container { 
-            padding: 15px 30px; border-radius: 0; 
-            display: inline-block;
-            text-shadow: none;
+            padding: 20px 40px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: white;
+            color: black;
+            border-radius: 0;
         }
 
-        #custom-text { font-size: 28px; font-weight: bold; margin-bottom: 5px; }
+        #custom-text { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
         #timer-display { font-size: 100px; font-weight: bold; font-variant-numeric: tabular-nums; }
 
         /* Panel Kontrol */
         #controls { 
-            margin-top: 50px; padding: 20px; 
+            display: block;
+            margin: 50px auto; 
+            padding: 30px; 
             background: rgba(30, 30, 30, 0.95); color: #fff; 
-            border-radius: 0; display: inline-block;
-            text-align: left; border: 1px solid #444;
-            max-width: 400px;
-            box-shadow: none;
+            border: 1px solid #444;
+            width: 90%;
+            max-width: 450px;
+            text-align: left;
         }
         
         /* Sembunyikan bagian desain & link saat di OBS agar lebih ringkas */
