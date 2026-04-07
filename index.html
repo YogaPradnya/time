@@ -76,17 +76,24 @@
         
         button { 
             background: #2563eb; color: white; border: none; 
-            padding: 8px 12px; border-radius: 0; cursor: pointer;
-            margin-right: 5px; font-weight: bold; transition: 0.2s;
+            padding: 8px 15px; border-radius: 0; cursor: pointer;
+            font-weight: bold; transition: 0.3s;
             box-shadow: none;
         }
         button:hover { background: #1d4ed8; }
-        button.danger { background: #dc2626; }
-        button.danger:hover { background: #b91c1c; }
-        button.success { background: #16a34a; }
-        button.success:hover { background: #15803d; }
-        button.generate { background: #8b5cf6; width: 100%; margin-top: 10px; padding: 12px; border-radius: 0;}
-        button.generate:hover { background: #7c3aed; }
+        
+        /* Tema Warna: Biru & Kuning */
+        button.primary, button.success, button.generate { background: #2563eb; } /* Biru */
+        button.primary:hover, button.success:hover, button.generate:hover { background: #1d4ed8; }
+        
+        button.danger, button.modifier, button:not(.primary):not(.success):not(.generate) { 
+            background: #facc15; color: #000; 
+        } /* Kuning */
+        button.danger:hover, button.modifier:hover, button:not(.primary):not(.success):not(.generate):hover { 
+            background: #eab308; 
+        }
+        
+        button.generate { width: 100%; margin-top: 10px; padding: 12px; }
         
         input[type="text"], input[type="number"], select { 
             padding: 10px; border-radius: 0; border: 1px solid #444; 
