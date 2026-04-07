@@ -22,29 +22,21 @@
 
         /* Panel Kontrol */
         #controls { 
-            margin-top: 40px; padding: 20px; 
+            margin-top: 20px; padding: 20px; 
             background: rgba(30, 30, 30, 0.95); color: #fff; 
             border-radius: 10px; display: inline-block;
             text-align: left; border: 1px solid #444;
             max-width: 400px;
-            transition: opacity 0.3s ease;
         }
         
         /* Mode OBS: Sembunyikan TOTAL secara default */
         .hide-controls #controls { 
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            margin: 0;
-            opacity: 0; 
-            pointer-events: none;
+            display: none; 
         }
 
-        /* Tampilkan TOTAL saat mouse diarahkan (hanya bekerja di mode Interact OBS) */
-        .hide-controls:hover #controls,
-        .hide-controls #controls:hover { 
-            opacity: 1; 
-            pointer-events: auto;
+        /* Saat di-klik untuk muncul (untuk mode Interact) */
+        .show-controls #controls { 
+            display: inline-block !important; 
         }
 
         /* Sembunyikan bagian desain & link saat di OBS agar lebih ringkas */
@@ -265,10 +257,16 @@
             alert("Link berhasil dicopy!");
         }
 
+        function toggleControls() {
+            if (document.body.classList.contains('hide-controls')) {
+                document.body.classList.toggle('show-controls');
+            }
+        }
+
+        // --- Load State ---
         function loadState() {
             const params = new URLSearchParams(window.location.search);
             
-            // 1. Coba load dari LocalStorage duluan sebagai basis
             if (localStorage.getItem('savedTime')) timeRemaining = parseInt(localStorage.getItem('savedTime'));
             if (localStorage.getItem('savedText')) document.getElementById('textInput').value = localStorage.getItem('savedText');
             if (localStorage.getItem('savedFont')) document.getElementById('fontInput').value = localStorage.getItem('savedFont');
@@ -276,7 +274,6 @@
             if (localStorage.getItem('savedBg')) document.getElementById('bgInput').value = localStorage.getItem('savedBg');
             if (localStorage.getItem('savedSolid')) document.getElementById('solidBg').checked = localStorage.getItem('savedSolid') === 'true';
 
-            // 2. Jika ada parameter di URL, timpa nilai LocalStorage (Penting untuk link OBS)
             if (window.location.search) {
                 document.body.classList.add('hide-controls');
                 
@@ -298,7 +295,10 @@
             updateStyle();
             updateDisplay();
         }
-
+        
+        // Tambahkan event click untuk toggle menu di mode OBS
+        document.getElementById('display-container').onclick = toggleControls;
+        
         loadState();
     </script>
 </body>
