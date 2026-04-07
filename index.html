@@ -75,29 +75,21 @@
         .control-group label { display: inline-block; width: 120px; font-size: 14px; }
         
         button { 
-            background: #2563eb; color: white; border: none; 
+            background: #fff; color: #000; border: 1px solid #fff; 
             padding: 8px 15px; border-radius: 0; cursor: pointer;
             font-weight: bold; transition: 0.3s;
             box-shadow: none;
         }
-        button:hover { background: #1d4ed8; }
+        button:hover { background: #eee; border-color: #eee; }
         
-        /* Tema Warna: Biru & Kuning */
-        button.primary, button.success, button.generate { background: #2563eb; } /* Biru */
-        button.primary:hover, button.success:hover, button.generate:hover { background: #1d4ed8; }
-        
-        button.danger, button.modifier, button:not(.primary):not(.success):not(.generate) { 
-            background: #facc15; color: #000; 
-        } /* Kuning */
-        button.danger:hover, button.modifier:hover, button:not(.primary):not(.success):not(.generate):hover { 
-            background: #eab308; 
+        button.generate { 
+            width: 100%; margin-top: 10px; padding: 12px; 
+            background: #fff; color: #000;
         }
         
-        button.generate { width: 100%; margin-top: 10px; padding: 12px; }
-        
         input[type="text"], input[type="number"], select { 
-            padding: 10px; border-radius: 0; border: 1px solid #444; 
-            background: #111; color: #fff; font-family: inherit;
+            padding: 10px; border-radius: 0; border: 1px solid #fff; 
+            background: #000; color: #fff; font-family: inherit;
             box-shadow: none;
         }
         input:focus { outline: none; border-color: #2563eb; box-shadow: none; }
@@ -137,14 +129,16 @@
                     <br><small style="color: #888;">Det</small>
                 </div>
             </div>
-            <div style="display: flex; gap: 5px;">
-                <button class="primary" onclick="modifyTime('set')" style="flex: 2; padding: 10px; background: #6366f1;">Set (Ganti Total)</button>
-                <button onclick="modifyTime('add')" style="flex: 1; padding: 10px; background: #16a34a;">+</button>
-                <button onclick="modifyTime('sub')" style="flex: 1; padding: 10px; background: #dc2626;">-</button>
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <button onclick="modifyTime('set')" style="padding: 10px;">Ganti Total Waktu (Set)</button>
+                <div style="display: flex; gap: 5px;">
+                    <button onclick="modifyTime('add')" style="flex: 1; padding: 10px;">Tambah Waktu</button>
+                    <button onclick="modifyTime('sub')" style="flex: 1; padding: 10px;">Kurang Waktu</button>
+                </div>
             </div>
             <div style="display: flex; gap: 5px; margin-top: 10px;">
-                <button class="success" onclick="startTimer()" style="flex: 1; padding: 10px;">Start</button>
-                <button class="danger" onclick="pauseTimer()" style="flex: 1; padding: 10px;">Pause</button>
+                <button onclick="startTimer()" style="flex: 1; padding: 10px;">Start</button>
+                <button onclick="pauseTimer()" style="flex: 1; padding: 10px;">Pause</button>
                 <button onclick="resetTimer()" style="flex: 1; padding: 10px;">Reset</button>
             </div>
         </div>
