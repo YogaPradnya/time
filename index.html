@@ -114,7 +114,7 @@
         </div>
 
         <div id="controls">
-            <h3 style="margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 10px;">1. Pengaturan Waktu</h3>
+            
         <div class="control-group">
             <div style="display: flex; align-items: center; gap: 5px; margin-bottom: 10px;">
                 <div style="text-align: center;">
@@ -131,7 +131,9 @@
                 </div>
             </div>
             <div style="display: flex; gap: 5px;">
-                <button class="primary" onclick="modifyTime('set')" style="flex: 1; padding: 10px; background: #6366f1;">Set Waktu</button>
+                <button class="primary" onclick="modifyTime('set')" style="flex: 2; padding: 10px; background: #6366f1;">Set (Ganti Total)</button>
+                <button onclick="modifyTime('add')" style="flex: 1; padding: 10px; background: #16a34a;">+</button>
+                <button onclick="modifyTime('sub')" style="flex: 1; padding: 10px; background: #dc2626;">-</button>
             </div>
             <div style="display: flex; gap: 5px; margin-top: 10px;">
                 <button class="success" onclick="startTimer()" style="flex: 1; padding: 10px;">Start</button>
